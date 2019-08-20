@@ -1,0 +1,21 @@
+docker build -t centos-sshd .
+docker run -d --name sshd -p 2222:22 centos-sshd
+docker ps
+docker login
+docker tag centos-sshd pinaki18/practice_image_tag
+docker push pinaki18/practice_image_tag
+
+
+----------------------------------------------
+
+Dockerfile contents:
+
+
+FROM centos:latest
+RUN yum install -y openssh-server
+RUN mkdir /var/run/sshd
+RUN useradd -c "Student User" -m student
+RUN echo "student:student" | chpasswd
+RUN ssh-keygen -t rsa -f /etc/ssh/ssh_host_rsa_key -q -N ""
+EXPOSE 22
+CMD ["/usr/sbin/sshd","-D"]
